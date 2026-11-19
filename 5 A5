@@ -1,0 +1,36 @@
+ALGORITHM UpdateDonor
+
+BEGIN
+    OPEN original text file for reading
+
+    IF open fails THEN
+        REPORT error
+        STOP
+    END IF
+
+    OPEN temporary file for writing
+
+    IF open fails THEN
+        CLOSE original file
+        REPORT error
+        STOP
+    END IF
+
+    FOR each record in original file
+
+        IF record ID matches target ID THEN
+            WRITE updated record to temporary file
+        ELSE
+            WRITE original record to temporary file
+        END IF
+
+    END FOR
+
+    CHECK all writes and close operations
+
+    IF successful THEN
+        REPLACE original file with temporary file
+    ELSE
+        REPORT failure and preserve recovery copy
+    END IF
+END
