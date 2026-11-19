@@ -1,0 +1,9 @@
+FUNCTION Factorial(n)
+
+BEGIN
+    IF n = 0 OR n = 1 THEN
+        RETURN 1
+    ELSE
+        RETURN n * Factorial(n - 1)
+    END IF
+END
