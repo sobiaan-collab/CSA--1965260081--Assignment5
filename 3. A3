@@ -1,0 +1,7 @@
+FUNCTION Swap(address of a, address of b)
+
+BEGIN
+    temp = value at a
+    value at a = value at b
+    value at b = temp
+END
