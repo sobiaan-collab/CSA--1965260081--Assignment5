@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Donor
+{
+    int id;
+    char name[30];
+    int age;
+    int fit;
+};
+
+int main(void)
+{
+    struct Donor *list = NULL;
+    size_t count = 0, capacity = 0;
+    int n;
+
+    printf("Number of donors: ");
+
+    if (scanf("%d", &n) != 1 || n < 0 || n > 10000)
+    {
+        printf("Invalid count\n");
+        return 1;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        struct Donor d;
+
+        printf("Enter id name age fit(1=yes,0=no): ");
+
+        if (scanf("%d %29s %d %d",
+                  &d.id, d.name, &d.age, &d.fit) != 4)
+        {
+            printf("Invalid donor data\n");
+            free(list);
+            return 1;
+        }
+
+        if (count == capacity)
+        {
+            size_t new_capacity =
+                capacity == 0 ? 2 : capacity * 2;
+
+            struct Donor *temp =
+                realloc(list, new_capacity * sizeof *list);
+
+            if (temp == NULL)
+            {
+                printf("Memory allocation failed\n");
+                free(list);
+                return 1;
+            }
+
+            list = temp;
+            capacity = new_capacity;
+        }
+
+        list[count++] = d;
+    }
+
+    printf("\nEligibility report\n");
+
+    for (size_t i = 0; i < count; i++)
+    {
+        printf("%d %s: %s\n",
+               list[i].id,
+               list[i].name,
+               (list[i].age >= 18 && list[i].fit == 1)
+                   ? "Eligible for screening"
+                   : "Not eligible");
+    }
+
+    free(list);
+    list = NULL;
+
+    return 0;
+}
