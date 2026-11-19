@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <sys/stat.h>
+
+struct Donor
+{
+    int id;
+    char name[20];
+    int age;
+};
+
+int main(void)
+{
+    struct Donor d = {101, "Anu", 25}, r;
+    FILE *fp;
+    struct stat st;
+
+    fp = fopen("donors.txt", "w");
+
+    if (fp == NULL)
+    {
+        perror("donors.txt");
+        return 1;
+    }
+
+    if (fprintf(fp, "%d,%s,%d\n",
+                d.id, d.name, d.age) < 0)
+    {
+        perror("write text");
+        fclose(fp);
+        return 1;
+    }
+
+    if (fclose(fp) != 0)
+    {
+        perror("close text");
+        return 1;
+    }
+
+    fp = fopen("donors.dat", "wb");
+
+    if (fp == NULL)
+    {
+        perror("donors.dat");
+        return 1;
+    }
+
+    if (fwrite(&d, sizeof d, 1, fp) != 1)
+    {
+        perror("write binary");
+        fclose(fp);
+        return 1;
+    }
+
+    if (fclose(fp) != 0)
+    {
+        perror("close binary");
+        return 1;
+    }
+
+    fp = fopen("donors.dat", "rb");
+
+    if (fp == NULL)
+    {
+        perror("read binary");
+        return 1;
+    }
+
+    if (fread(&r, sizeof r, 1, fp) != 1)
+    {
+        printf("Could not read record\n");
+        fclose(fp);
+        return 1;
+    }
+
+    fclose(fp);
+
+    printf("Read: %d %s %d\n", r.id, r.name, r.age);
+
+    if (stat("donors.txt", &st) == 0)
+        printf("Text size: %ld bytes\n", (long)st.st_size);
+
+    if (stat("donors.dat", &st) == 0)
+        printf("Binary size: %ld bytes\n", (long)st.st_size);
+
+    return 0;
+}
