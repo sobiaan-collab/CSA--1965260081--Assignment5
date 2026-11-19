@@ -1,0 +1,28 @@
+ALGORITHM DynamicSum
+
+BEGIN
+    IF argument count is invalid THEN
+        DISPLAY usage message
+        STOP
+    END IF
+
+    CONVERT argument to integer n
+
+    IF n is not positive THEN
+        DISPLAY error
+        STOP
+    END IF
+
+    ALLOCATE n integers
+
+    IF allocation fails THEN
+        DISPLAY memory error
+        STOP
+    END IF
+
+    READ n values and calculate sum
+
+    DISPLAY sum
+
+    FREE allocated memory
+END
